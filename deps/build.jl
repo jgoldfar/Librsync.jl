@@ -14,27 +14,24 @@ provides(Sources,
 const prefix = joinpath(BinDeps.depsdir(librsync), "usr")
 const srcdir = joinpath(BinDeps.depsdir(librsync), "src", librsyncName)
 const builddir = joinpath(srcdir, "build")
-# const debugprefix = joinpath(BinDeps.depsdir(librsync), "usr-debug")
-# const debugbuilddir = joinpath(srcdir, "Debug")
+const doDebug = true
+const debugArg = doDebug ? "-DCMAKE_BUILD_TYPE=Debug " : "-DCMAKE_BUILD_TYPE=Release "
+const buildRdiff = true
+const RdiffArg = buildRdiff ? "-DBUILD_RDIFF=ON " : "-DBUILD_RDIFF=OFF "
 
-provides(SimpleBuild, (@build_steps begin
-                         GetSources(librsync)
-                         CreateDirectory(builddir)
-                         @build_steps begin
-                           ChangeDirectory(builddir)
-                           `cmake -D CMAKE_INSTALL_PREFIX=$(prefix) -D CMAKE_BUILD_TYPE=Debug -D BUILD_RDIFF=OFF ..`
-                           `make`
-                           `make install`
-                         end
-                        #  CreateDirectory(debugbuilddir)
-                        #  @build_steps begin
-                        #    ChangeDirectory(debugbuilddir)
-                        #    `cmake -D CMAKE_INSTALL_PREFIX=$(debugprefix) -D CMAKE_BUILD_TYPE=Debug -D BUILD_RDIFF=OFF ..`
-                        #    `make`
-                        #    `make install`
-                        #  end
-                       end),
-         librsync,
-         os = :Unix)
+provides(SimpleBuild, 
+  (@build_steps begin
+    GetSources(librsync)
+    CreateDirectory(builddir)
+    @build_steps begin
+      ChangeDirectory(builddir)
+      `cmake -DCMAKE_INSTALL_PREFIX=$(prefix) $(debugArg)$(RdiffArg) ..`
+      `make`
+      `make check`
+      `make install`
+    end
+  end),
+  librsync,
+  os = :Unix)
 
 @BinDeps.install @compat Dict(:librsync => :librsync)
