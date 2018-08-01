@@ -1,4 +1,4 @@
-VERSION >= v"0.4.0-dev+6521" && __precompile__() 
+__precompile__() 
 module Librsync
 
 const depsfile = joinpath(dirname(dirname(@__FILE__)), "deps", "deps.jl")
