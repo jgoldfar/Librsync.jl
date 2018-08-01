@@ -4,3 +4,6 @@ using Librsync
 else
     using Test
 end
+
+@test Librsync.MD4_SUM_LENGTH > 0
+@test Librsync.BLAKE2_SUM_LENGTH > 0
