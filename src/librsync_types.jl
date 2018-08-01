@@ -1,7 +1,5 @@
 # Automatically generated using Clang.jl wrap_c, version 0.0.0
 
-using Compat
-
 const OBJC_NEW_PROPERTIES = 1
 
 # Skipping MacroDefinition: USER_ADDR_NULL ( ( user_addr_t ) 0 )
